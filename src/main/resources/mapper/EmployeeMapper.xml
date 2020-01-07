@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lds.tpms.dao.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="com.lds.tpms.pojo.Employee">
+        <id column="emp_id" jdbcType="INTEGER" property="empId"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="emp_no" jdbcType="VARCHAR" property="empNo"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="emp_sex" jdbcType="INTEGER" property="empSex"/>
+        <result column="emp_type" jdbcType="VARCHAR" property="empType"/>
+        <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+    </resultMap>
+
+    <resultMap id="EmplWithDept" type="com.lds.tpms.pojo.Employee">
+        <id column="emp_id" jdbcType="INTEGER" property="empId"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="emp_no" jdbcType="VARCHAR" property="empNo"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="emp_sex" jdbcType="INTEGER" property="empSex"/>
+        <result column="emp_type" jdbcType="VARCHAR" property="empType"/>
+        <result column="d_id" jdbcType="INTEGER" property="dId"/>
+        <!--  指定联合查询出的部门字段的封装  -->
+        <association property="department" javaType="com.lds.tpms.pojo.Department">
+            <id column="dept_id" property="deptId"/>
+            <result column="dept_name" property="deptName"/>
+            <result column="dept_desc" property="deptDesc"/>
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    emp_id, emp_name, password, emp_no, real_name, emp_sex, emp_type, dept_id
+  </sql>
+    <sql id="With_Dept_Column_List">
+    e.emp_id, e.emp_name, e.password, e.emp_no, e.real_name, e.emp_sex, e.emp_type, e.d_id, d.dept_id, d.dept_name, d.dept_desc
+  </sql>
+
+    <select id="getEmpByName" resultMap="EmplWithDept">
+        select
+            <include refid="With_Dept_Column_List"/>
+        from emp e
+          left join dept d
+          on e.d_id = d.dept_id
+        where e.emp_no = #{empNo}
+    </select>
+
+    <select id="selAllEmpBydId" resultMap="BaseResultMap">
+        select * from `emp` where `d_id` = #{dId};
+    </select>
+
+    <select id="selAllStaffBydId" resultMap="BaseResultMap">
+        select * from `emp` where `d_id` = #{dId} and `emp_type` = 'staff';
+    </select>
+
+    <select id="selEmpByEmpId" resultMap="BaseResultMap">
+        select * from `emp` where `emp_id` = #{empId};
+    </select>
+
+    <select id="getEmpNosByDeptId" resultType="java.lang.String">
+        select `emp_no` from `emp` where `d_id` = #{dId} order by `emp_no` asc;
+    </select>
+
+    <update id="cancelAdmin">
+        update `emp` set `emp_type` = 'staff' where `d_id` = #{dId};
+    </update>
+
+    <update id="appointAdmin">
+        update `emp` set `emp_type` = 'admin' where `emp_id` = #{empId};
+    </update>
+
+    <insert id="addEmp">
+        insert into `emp` (`password`,`emp_no`,`real_name`,`emp_sex`,`emp_type`,`d_id`) values (#{password},#{empNo},#{realName},#{empSex},#{empType},#{dId});
+    </insert>
+
+    <delete id="delEmpById">
+        delete from `emp` where `emp_id` = #{empId};
+    </delete>
+
+    <select id="countStaffByDeptId" resultType="java.lang.Integer">
+        select count(*) from `emp` where `d_id` = #{deptId} and `emp_type` = 'staff';
+    </select>
+
+    <select id="countStaffAttByDateAndDeptIdAndType" resultType="java.lang.Integer">
+        select count(*) from `att_record` where `att_dept_id` = #{deptId} and `att_date` &lt;= #{endDate} and `att_date` &gt;= #{beginDate} and `att_type` = #{type};
+    </select>
+
+</mapper>

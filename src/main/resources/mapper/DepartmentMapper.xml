@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lds.tpms.dao.DepartmentMapper">
+
+    <resultMap id="BaseResultMap" type="com.lds.tpms.pojo.Department">
+        <id column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="emp_no" jdbcType="VARCHAR" property="empNo"/>
+        <result column="dept_desc" jdbcType="VARCHAR" property="deptDesc"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    dept_id, dept_name, emp_no, dept_desc
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dept
+        where dept_id = #{deptId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selAllDept" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dept
+    </select>
+
+    <select id="selDeptByName" resultMap="BaseResultMap">
+        select * from `dept` where `dept_name` = #{deptName}
+    </select>
+
+    <select id="selDeptById" resultMap="BaseResultMap">
+        select * from `dept` where `dept_id` = #{deptId}
+    </select>
+
+    <insert id="addDept">
+        insert into
+        `dept`
+        (`dept_name`,`dept_desc`)
+        values
+         (#{deptName},#{deptDesc})
+    </insert>
+
+    <delete id="delDept">
+        delete from `dept` where dept_id = #{deptId}
+    </delete>
+
+    <update id="updateDept">
+        update `dept` set `dept_name` = #{deptName},`dept_desc` = #{deptDesc} where `dept_id` = #{deptId}
+    </update>
+
+    <update id="appoint">
+        update `dept` set `emp_no` = #{empNo} where `dept_id` = #{deptId}
+    </update>
+
+</mapper>

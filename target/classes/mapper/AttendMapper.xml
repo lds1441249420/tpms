@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lds.tpms.dao.AttendMapper">
+
+    <resultMap id="RecordResultMap" type="com.lds.tpms.pojo.AttRecord">
+        <id column="att_id" jdbcType="INTEGER" property="attId"/>
+        <result column="att_date" jdbcType="VARCHAR" property="attDate"/>
+        <result column="att_time" jdbcType="VARCHAR" property="attTime"/>
+        <result column="att_emp_id" jdbcType="INTEGER" property="attEmpId"/>
+        <result column="att_dept_id" jdbcType="INTEGER" property="attDeptId"/>
+        <result column="att_type" jdbcType="INTEGER" property="attType"/>
+        <result column="att_at" jdbcType="VARCHAR" property="attAt"/>
+        <!--  指定联合查询出的部门字段的封装  -->
+        <association property="employee" javaType="com.lds.tpms.pojo.Employee">
+            <id column="emp_id" jdbcType="INTEGER" property="empId"/>
+            <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+            <result column="password" jdbcType="VARCHAR" property="password"/>
+            <result column="emp_no" jdbcType="VARCHAR" property="empNo"/>
+            <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+            <result column="emp_sex" jdbcType="INTEGER" property="empSex"/>
+            <result column="emp_type" jdbcType="VARCHAR" property="empType"/>
+            <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="TimeResultMap" type="com.lds.tpms.pojo.AttTime">
+        <id column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        <result column="time_work" jdbcType="VARCHAR" property="timeWork"/>
+        <result column="time_off" jdbcType="VARCHAR" property="timeOff"/>
+    </resultMap>
+
+    <resultMap id="RestResultMap" type="com.lds.tpms.pojo.AttRest">
+        <id column="rest_id" jdbcType="INTEGER" property="restId"/>
+        <result column="begin_day" jdbcType="VARCHAR" property="beginDay"/>
+        <result column="end_day" jdbcType="VARCHAR" property="endDay"/>
+        <result column="rest_desc" jdbcType="VARCHAR" property="restDesc"/>
+        <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+    </resultMap>
+
+    <resultMap id="RepairResultMap" type="com.lds.tpms.pojo.AttRepair">
+        <id column="repair_id" jdbcType="INTEGER" property="repairId"/>
+        <result column="repair_emp_id" jdbcType="INTEGER" property="repairEmpId"/>
+        <result column="repair_emp_no" jdbcType="VARCHAR" property="repairEmpNo"/>
+        <result column="repair_emp_real_name" jdbcType="VARCHAR" property="repairEmpRealName"/>
+        <result column="repair_dept_id" jdbcType="INTEGER" property="repairDeptId"/>
+        <result column="repair_record_date" jdbcType="VARCHAR" property="repairRecordDate"/>
+        <result column="repair_record_at" jdbcType="VARCHAR" property="repairRecordAt"/>
+        <result column="repair_desc" jdbcType="VARCHAR" property="repairDesc"/>
+        <result column="repair_status" jdbcType="INTEGER" property="repairStatus"/>
+    </resultMap>
+
+    <resultMap id="LeaveResultMap" type="com.lds.tpms.pojo.Leave">
+        <id column="leave_id" jdbcType="INTEGER" property="leaveId"/>
+        <result column="leave_emp_id" jdbcType="INTEGER" property="leaveEmpId"/>
+        <result column="leave_emp_real_name" jdbcType="VARCHAR" property="leaveEmpRealName"/>
+        <result column="leave_dept_id" jdbcType="INTEGER" property="leaveDeptId"/>
+        <result column="leave_begin" jdbcType="VARCHAR" property="leaveBegin"/>
+        <result column="leave_end" jdbcType="VARCHAR" property="leaveEnd"/>
+        <result column="leave_type" jdbcType="VARCHAR" property="leaveType"/>
+        <result column="leave_desc" jdbcType="VARCHAR" property="leaveDesc"/>
+        <result column="approval" jdbcType="INTEGER" property="approval"/>
+    </resultMap>
+
+    <resultMap id="RecordResultMapInEmp" type="com.lds.tpms.pojo.Employee">
+        <id column="emp_id" jdbcType="INTEGER" property="empId"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="emp_no" jdbcType="VARCHAR" property="empNo"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="emp_sex" jdbcType="INTEGER" property="empSex"/>
+        <result column="emp_type" jdbcType="VARCHAR" property="empType"/>
+        <result column="d_id" jdbcType="INTEGER" property="dId"/>
+        <!--  指定联合查询出的部门字段的封装  -->
+        <association property="attRecord" javaType="com.lds.tpms.pojo.AttRecord">
+            <id column="att_id" jdbcType="INTEGER" property="attId"/>
+            <result column="att_date" jdbcType="VARCHAR" property="attDate"/>
+            <result column="att_time" jdbcType="VARCHAR" property="attTime"/>
+            <result column="att_emp_id" jdbcType="INTEGER" property="attEmpId"/>
+            <result column="att_type" jdbcType="INTEGER" property="attType"/>
+            <result column="att_at" jdbcType="VARCHAR" property="attAt"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="LeaveResultMapInEmp" type="com.lds.tpms.pojo.Employee">
+        <id column="emp_id" jdbcType="INTEGER" property="empId"/>
+        <result column="emp_name" jdbcType="VARCHAR" property="empName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="emp_no" jdbcType="VARCHAR" property="empNo"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="emp_sex" jdbcType="INTEGER" property="empSex"/>
+        <result column="emp_type" jdbcType="VARCHAR" property="empType"/>
+        <result column="d_id" jdbcType="INTEGER" property="dId"/>
+        <!--  指定联合查询出的部门字段的封装  -->
+        <association property="leave" javaType="com.lds.tpms.pojo.Leave">
+            <id column="leave_id" jdbcType="INTEGER" property="leaveId"/>
+            <id column="leave_emp_id" jdbcType="INTEGER" property="leaveEmpId"/>
+            <result column="leave_begin" jdbcType="VARCHAR" property="leaveBegin"/>
+            <result column="leave_end" jdbcType="VARCHAR" property="leaveEnd"/>
+            <result column="leave_type" jdbcType="VARCHAR" property="leaveType"/>
+            <result column="leave_desc" jdbcType="VARCHAR" property="leaveDesc"/>
+            <result column="approval" jdbcType="INTEGER" property="approval"/>
+        </association>
+    </resultMap>
+
+    <select id="selWorkTimeByDeptId" resultMap="TimeResultMap">
+        select * from `att_time` where `dept_id` = #{deptId};
+    </select>
+
+    <update id="setWorkTimeByDeptId">
+        update `att_time` set `time_work` = #{timeWork},`time_off` = #{timeOff} where `dept_id` = #{deptId};
+    </update>
+
+    <insert id="addWorkTimeByDeptId">
+        insert into `att_time` (`dept_id`, `time_work`, `time_off`) values (#{deptId}, #{timeWork}, #{timeOff});
+    </insert>
+
+    <select id="selAllRestByDeptId" resultMap="RestResultMap">
+        select * from `att_rest` where `dept_id` = #{deptId};
+    </select>
+
+    <delete id="delRestByRestId">
+        delete from `att_rest` where `rest_id` = #{restId};
+    </delete>
+
+    <insert id="addRestByDeptId">
+        insert into `att_rest` (`begin_day`,`end_day`,`rest_desc`,`dept_id`) values (#{beginDay},#{endDay},#{restDesc},#{deptId});
+    </insert>
+
+    <select id="selRecordByDate" resultMap="RecordResultMap">
+        select * from `att_record` where `att_date` = #{date} and `att_emp_id` = #{empId} and `att_at` = #{attAt};
+    </select>
+
+    <select id="isRestByDeptId" resultType="String">
+        select `rest_desc` from `att_rest` where `begin_day` &lt;= #{date} and `end_day` &gt;= #{date} and `dept_id` = #{deptId};
+    </select>
+
+    <select id="selLeaveByEmpId" resultMap="LeaveResultMap">
+        select * from `leave` where `leave_emp_id` = #{empId} and `leave_begin` &lt;= #{date} and `leave_end` &gt;= #{date} and `approval`=0;
+    </select>
+
+    <insert id="attend">
+        insert into `att_record` (`att_date`,`att_time`,`att_emp_id`, `att_dept_id`,`att_type`,`att_at`) values (#{attDate},#{attTime},#{empId}, #{deptId},#{attType},#{attAt});
+    </insert>
+
+    <insert id="repair">
+        insert into `att_repair`
+        (`repair_emp_id`, `repair_emp_no`, `repair_emp_real_name`, `repair_record_date`, `repair_dept_id`, `repair_record_at`, `repair_desc`, `repair_status`)
+        values
+        (#{repairEmpId}, #{repairEmpNo}, #{repairEmpRealName}, #{repairRecordDate}, #{deptId}, #{repairRecordAt}, #{repairDesc}, #{repairStatus});
+    </insert>
+
+    <select id="isRepair" resultMap="RepairResultMap">
+        select * from `att_repair` where `repair_emp_id` = #{repairEmpId} and `repair_record_date` = #{repairRecordDate} and `repair_record_at` =#{repairRecordAt};
+    </select>
+
+    <select id="selRepairByDeptId" resultMap="RepairResultMap">
+        select * from `att_repair` where `repair_record_date` &lt;= #{endDate} and `repair_record_date` &gt;= #{beginDate} and `repair_dept_id` = #{deptId};
+    </select>
+
+    <update id="repairExamine">
+        update `att_repair` set `repair_status` = #{repairStatus} where `repair_id` = #{repairId};
+    </update>
+
+    <delete id="delRepair">
+        delete from `att_repair` where `repair_id` = #{repairId};
+    </delete>
+
+    <insert id="addLeave">
+        insert into `leave`
+        (`leave_emp_id`, `leave_emp_real_name`, `leave_dept_id`, `leave_begin`, `leave_end`, `leave_type`, `leave_desc`, `approval`)
+        VALUES
+        (#{leaveEmpId}, #{leaveEmpRealName}, #{leaveDeptId}, #{leaveBegin}, #{leaveEnd}, #{leaveType}, #{leaveDesc}, #{approval});
+    </insert>
+
+    <select id="selLeaveByDeptId" resultMap="LeaveResultMap">
+        select * from `leave` where `leave_dept_id` =#{leaveDeptId};
+    </select>
+
+    <update id="leaveExamine">
+        update `leave` set `approval` = #{approval} where `leave_id` = #{leaveId};
+    </update>
+
+    <delete id="delLeave">
+        delete from `leave` where `leave_id` = #{leaveId};
+    </delete>
+
+    <select id="selLeavesByEmpId" resultMap="LeaveResultMap">
+        select * from `leave` where `leave_emp_id` = #{empId};
+    </select>
+
+</mapper>

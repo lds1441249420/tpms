@@ -1,0 +1,58 @@
+@RequestMapping("/userRegist")
+	public String userRegist(Model model, HttpServletRequest request,
+			@Validated User user, BindingResult bindingResult,
+			@RequestParam String checkImg) throws Exception {
+		if (bindingResult.hasErrors()) {
+			List<ObjectError> errors =bindingResult.getAllErrors();
+			List<String> list = new ArrayList<>();
+			for (ObjectError objectError : errors) {
+				String str = new String(objectError.getDefaultMessage()
+						.getBytes("ISO-8859-1"), "gbk");
+				list.add(str);
+			}
+			model.addAttribute("errors", list);
+			return "regist";
+		}
+
+
+public class User {
+    private Integer uid;
+    @NotBlank(message="{user.username.notNull}")
+    @Size(min=2,max=30,message="{user.username.length.error}")
+    private String username;
+    @NotBlank(message="{user.password.notNull}")
+    private String password;
+
+    private String name;
+
+   @NotBlank(message="{user.email.notNull}")
+    private String email;
+
+
+
+	<c:if test="${errors!=null}">
+						<c:forEach items="${errors}" var="error">
+							<font color="red">${error}</font>&nbsp;&nbsp;
+						</c:forEach>
+					</c:if>
+
+UserValidationMessage.properties
+#配置校验信息
+user.username.notNull=用户名不可为空
+user.username.length.error=用户名的名字的长度必须是1至30
+user.password.notNull=密码不可为空
+user.email.notNull=邮箱不可为空
+springmvc中配置
+	<!-- 配置一个校验器 -->
+
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<!-- hibernate校验器  指定了提供校验器的提供商  -->
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+		<!-- 指定校验时资源文件  也就是发生错误显示的信息  -->
+		<property name="validationMessageSource" ref="messageSource"/>
+	</bean>
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:UserValidationMessage"/>
+		<property name="fileEncodings" value="utf-8"/>
+		<property name="cacheSeconds" value="120"/>
+	</bean>
